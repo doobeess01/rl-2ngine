@@ -4,6 +4,9 @@ import tcod.ecs
 import game.state
 import game.queue
 
+from typing import Final
+
+
 console: tcod.console.Console
 context: tcod.context.Context
 
@@ -26,3 +29,9 @@ def time():
 
 
 KEYBINDINGS: dict[game.state.State: dict]
+
+
+
+# Global constants
+
+CAMERA_DIMENSIONS = (39,39)
