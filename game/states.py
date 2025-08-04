@@ -1,3 +1,5 @@
+import tcod.camera
+
 import g
 
 from game.state import State
@@ -22,10 +24,14 @@ class Menu(State):
 class InGame(State):
     def on_render(self):
         map_ = g.player.relation_tag[IsIn]
-        g.console.rgb[0:map_.components[MapShape][0], 0:map_.components[MapShape][1]] = TILES['graphic'][map_.components[Tiles]]
+        camera = tcod.camera.get_camera((39,39), g.player.components[Position].ij)
+        screen_slice, world_slice = tcod.camera.get_slices((39,39), map_.components[MapShape], camera)
+        g.console.rgb[screen_slice] = TILES['graphic'][map_.components[Tiles][world_slice]]
 
         for e in g.registry.Q.all_of(components=[Graphic]):
 
             pos = e.components[Position]
+            rendered_pos = pos - (camera[1], camera[0])
             graphic = e.components[Graphic]
-            g.console.rgb[["ch", "fg"]][pos.ij] = graphic.ch, graphic.fg
+            if camera[0]-1 < rendered_pos.x < 39 and camera[1]-1 < rendered_pos.y < 39:
+                g.console.rgb[["ch", "fg"]][rendered_pos.ij] = graphic.ch, graphic.fg
