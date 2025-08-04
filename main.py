@@ -5,7 +5,7 @@ import g
 
 from game.keybindings import KEYBINDINGS
 from game.states import InGame
-from game.world_init import world_init
+from game.world_tools import world_init
 
 CONSOLE_WIDTH = 60
 CONSOLE_HEIGHT = 60
