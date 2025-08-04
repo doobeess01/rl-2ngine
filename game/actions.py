@@ -4,7 +4,7 @@ from game.action import Action, GameAction
 from game.tiles import TILES
 
 from game.components import Position, Tiles
-from game.tags import IsCreature, IsIn
+from game.tags import IsCreature
 
 
 class Wait(GameAction):
@@ -29,7 +29,7 @@ class Bump(Directional):
 
 class Move(Directional):
     def execute(self, actor):
-        map_ = actor.relation_tag[IsIn]
+        map_ = actor.components[Position].map_
         dest = self.dest(actor)
         if TILES['walk_cost'][map_.components[Tiles][dest.ij]] > 0:
             actor.components[Position] = dest

@@ -7,7 +7,6 @@ from game.action import Action
 from game.tiles import TILES
 
 from game.components import Position, Graphic, Tiles, MapShape
-from game.tags import IsIn
 
 
 '''
@@ -23,7 +22,7 @@ class Menu(State):
 
 class InGame(State):
     def on_render(self):
-        map_ = g.player.relation_tag[IsIn]
+        map_ = g.player.components[Position].map_
         camera = tcod.camera.get_camera((39,39), g.player.components[Position].ij)
         screen_slice, world_slice = tcod.camera.get_slices((39,39), map_.components[MapShape], camera)
         g.console.rgb[screen_slice] = TILES['graphic'][map_.components[Tiles][world_slice]]
