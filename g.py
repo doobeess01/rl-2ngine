@@ -34,4 +34,4 @@ KEYBINDINGS: dict[game.state.State: dict]
 
 # Global constants
 
-CAMERA_DIMENSIONS = (39,39)
+CAMERA_DIMENSIONS = (31,31)

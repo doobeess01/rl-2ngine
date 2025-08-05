@@ -31,5 +31,5 @@ class InGame(State):
             pos = e.components[Position]
             rendered_pos = pos - (camera[1], camera[0])
             graphic = e.components[Graphic]
-            if camera[0]-1 < rendered_pos.x < g.CAMERA_DIMENSIONS[1] and camera[1]-1 < rendered_pos.y < g.CAMERA_DIMENSIONS[0]:
+            if 0 <= rendered_pos.x < g.CAMERA_DIMENSIONS[1] and 0 <= rendered_pos.y < g.CAMERA_DIMENSIONS[0]:
                 g.console.rgb[["ch", "fg"]][rendered_pos.ij] = graphic.ch, graphic.fg

@@ -15,14 +15,14 @@ def world_init():
 
     from game.templates.creatures import PLAYER, MONSTER
     
-    shape = (40,40)
+    shape = (60,60)
     map_ = g.registry.new_entity(components={MapShape: shape, Tiles: generate_map(shape)})
     
     g.player = spawn_creature(PLAYER, Position(3,3, map_))
 
     queue = g.registry[None].components[Queue] = Queue()
 
-    monster = spawn_creature(MONSTER, Position(20,20, map_))
+    monster = spawn_creature(MONSTER, Position(25,25, map_))
     enter_level(map_)
 
 
