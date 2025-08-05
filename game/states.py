@@ -10,6 +10,8 @@ from game.tags import IsItem, IsCreature
 from game.message_log import MessageLog
 from game.text import Text
 from game.entity_tools import inventory
+
+import game.actions as actions
 import game.colors as colors
 
 
@@ -57,15 +59,13 @@ class InventoryView(ItemList):
 
 class PickupItemsMenu(ItemList):
     def __init__(self, parent=None):
-        from game.actions import PickupItem  # NOTE: TEMPORARY SOLUTION! FIX AT SOME POINT! FIGURE IT OUT!
-        super().__init__('Pick up which?', action=PickupItem, parent=parent)
+        super().__init__('Pick up which?', action=actions.PickupItem, parent=parent)
     def get_items(self):
         return [e for e in g.registry.Q.all_of(tags=[g.player.components[Position], IsItem])] 
     
 class DropItemsMenu(ItemList):
     def __init__(self, parent=None):
-        from game.actions import DropItem  # NOTE: TEMPORARY SOLUTION! FIX AT SOME POINT! FIGURE IT OUT!
-        super().__init__('Drop which?', action=DropItem, parent=parent)
+        super().__init__('Drop which?', action=actions.DropItem, parent=parent)
     def get_items(self):
         return inventory(g.player)
 
