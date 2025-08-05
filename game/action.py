@@ -15,3 +15,7 @@ class Action:
 class GameAction(Action):
     def __init__(self, cost=100):
         super().__init__(cost)
+
+class Pass(Action):
+    def __init__(self, *args, **kwargs):
+        super().__init__()

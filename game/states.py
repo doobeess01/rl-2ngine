@@ -3,7 +3,7 @@ import tcod.camera
 import g
 
 from game.state import State
-from game.action import Action
+from game.action import Action, Pass
 from game.tiles import TILES
 from game.components import Position, Graphic, Tiles, MapShape, Name, HP, MaxHP, Quantity
 from game.message_log import MessageLog
@@ -30,15 +30,27 @@ class Menu(State):
         self.options = self.get_options()
 
 
-class InventoryView(Menu):
+class ItemList(Menu):
+    def __init__(self, title: str, action: Action = Pass, parent=None):
+        self.title = title
+        self.action = action
+        super().__init__(parent)
     def get_options(self) -> list[tuple[Text, Action]]:
-        return [(Text(e.components[Name]+(f' (x{e.components[Quantity]})' if e.components[Quantity] > 1 else ''),fg=e.components[Graphic].fg, bg=e.components[Graphic].bg), Action(e)) for e in inventory(g.player)]
-
+        return [(Text(e.components[Name]+(f' (x{e.components[Quantity]})' if e.components[Quantity] > 1 else ''),fg=e.components[Graphic].fg, bg=e.components[Graphic].bg), self.action(e)) for e in self.get_items()]
+    def get_items(self):
+        return []
     def on_render(self):
         fg, bg = colors.DEFAULT
-        g.console.print(0,0,'Inventory',fg=fg,bg=bg)
+        g.console.print(0,0,self.title,fg=fg,bg=bg)
         for i,option in enumerate(self.options):
             option[0].print(1,2+i, invert=True if i==self.cursor else False)
+
+
+class InventoryView(ItemList):
+    def __init__(self, parent=None):
+        super().__init__('Inventory', parent=parent)
+    def get_items(self):
+        return inventory(g.player)
 
 
 class InGame(State):
