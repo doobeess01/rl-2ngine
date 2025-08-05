@@ -6,9 +6,11 @@ from game.action import Action, GameAction
 from game.tiles import TILES
 from game.message_log import log
 from game.state import State
+from game.entity_tools import add_to_inventory, drop
+from game.states import PickupItemsMenu
 
-from game.components import Position, Tiles, Name, HP, UnarmedAttack
-from game.tags import IsCreature
+from game.components import Position, Tiles, Name, HP, UnarmedAttack, Quantity
+from game.tags import IsCreature, IsItem
 
 import game.colors as colors
 
@@ -58,16 +60,37 @@ class Melee(GameAction):
         self.target.components[HP] -= damage
 
 
-class MoveCursor(Action):
-    def __init__(self, step: int):
-        self.step = step
+class PickupItem(GameAction):
+    def __init__(self, item):
+        self.item = item
+        super().__init__()
+    
+    def execute(self, actor):
+        log(f'{actor.components[Name]} picks up the {self.item.components[Name]}{f" (x{self.item.components[Quantity]})" if self.item.components[Quantity] > 1 else ""}.')
+        add_to_inventory(self.item, actor)
+
+
+class DropItem(GameAction):
+    def __init__(self, item):
+        self.item = item
         super().__init__()
     def execute(self, actor):
-        g.state.move_cursor(self.step)
+        log(f'{actor.components[Name]} drops the {self.item.components[Name]}.')
+        drop(self.item)
 
-class Select(Action):
+
+class PickupItems(GameAction):
     def execute(self, actor):
-        g.state.select()
+        assert actor == g.player
+        items = [e for e in g.registry.Q.all_of(tags=[actor.components[Position], IsItem])]
+
+        if len(items) > 1:
+            EnterSubstate(PickupItemsMenu)(actor)
+        elif items:
+            PickupItem(items[0])(actor)
+        else:
+            log("There's nothing to pick up here.", colors.MSG_FAILED_ACTION)
+
 
 # STATE ACTIONS
 
@@ -89,3 +112,15 @@ class EnterSubstate(StateAction):
     def execute(self, actor):
         parent = g.state
         g.state = self.state(parent=parent)
+
+
+class MoveCursor(Action):
+    def __init__(self, step: int):
+        self.step = step
+        super().__init__()
+    def execute(self, actor):
+        g.state.move_cursor(self.step)
+
+class Select(Action):
+    def execute(self, actor):
+        g.state.select()

@@ -6,6 +6,7 @@ from game.state import State
 from game.action import Action, Pass
 from game.tiles import TILES
 from game.components import Position, Graphic, Tiles, MapShape, Name, HP, MaxHP, Quantity
+from game.tags import IsItem, IsCreature
 from game.message_log import MessageLog
 from game.text import Text
 from game.entity_tools import inventory
@@ -28,6 +29,8 @@ class Menu(State):
     def select(self):
         self.options[self.cursor][1](g.player)  # Execute the action
         self.options = self.get_options()
+        if self.cursor >= len(self.options):
+            self.cursor = len(self.options)-1
 
 
 class ItemList(Menu):
@@ -52,6 +55,20 @@ class InventoryView(ItemList):
     def get_items(self):
         return inventory(g.player)
 
+class PickupItemsMenu(ItemList):
+    def __init__(self, parent=None):
+        from game.actions import PickupItem  # NOTE: TEMPORARY SOLUTION! FIX AT SOME POINT! FIGURE IT OUT!
+        super().__init__('Pick up which?', action=PickupItem, parent=parent)
+    def get_items(self):
+        return [e for e in g.registry.Q.all_of(tags=[g.player.components[Position], IsItem])] 
+    
+class DropItemsMenu(ItemList):
+    def __init__(self, parent=None):
+        from game.actions import DropItem  # NOTE: TEMPORARY SOLUTION! FIX AT SOME POINT! FIGURE IT OUT!
+        super().__init__('Drop which?', action=DropItem, parent=parent)
+    def get_items(self):
+        return inventory(g.player)
+
 
 class InGame(State):
     def on_render(self):
@@ -62,10 +79,24 @@ class InGame(State):
         screen_slice, world_slice = tcod.camera.get_slices(g.CAMERA_DIMENSIONS, map_.components[MapShape], camera)
         g.console.rgb[screen_slice] = TILES['graphic'][map_.components[Tiles][world_slice]]
 
+        rendered_priority: dict[Position, int] = {}
         for e in g.registry.Q.all_of(components=[Graphic, Position], tags=[map_]):
             pos = e.components[Position]
+
+            render_order = 1
+            if IsItem in e.tags:
+                render_order = 2
+            if IsCreature in e.tags:
+                render_order = 3
+            if g.player == e:
+                render_order = 4
+            if rendered_priority.get(pos, 0) >= render_order:
+                continue  # Do not render over a more important entity
+            rendered_priority[pos] = render_order
+
             rendered_pos = pos - (camera[1], camera[0])
             graphic = e.components[Graphic]
+
             if 0 <= rendered_pos.x < g.CAMERA_DIMENSIONS[1] and 0 <= rendered_pos.y < g.CAMERA_DIMENSIONS[0]:
                 g.console.rgb[["ch", "fg"]][rendered_pos.ij] = graphic.ch, graphic.fg
 

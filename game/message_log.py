@@ -4,12 +4,11 @@ import g
 
 from game.text import Text
 
-@attrs.define
+
 class Message(Text):
     def __init__(self, text, fg, bg, count=1):
         super().__init__(text, fg, bg)
         self.count = count
-
     def __eq__(self, other):
         if self.text == other.text and self.fg == other.fg and self.bg == other.bg:
             return True

@@ -43,9 +43,10 @@ def spawn_item(template: Entity, position: Position = None, quantity: int = 1, c
         for e in g.registry.Q.all_of(tags=[position, IsStackable], relations=[(IsA, template)]):
             # If there is an identical stackable item on the same square, add to its quantity
             e.components[Quantity] += quantity
+            item.clear()
             return e
         else:
-            item = spawn_entity(template, map_, position, components={Quantity: quantity}|components, tags=tags)
+            item = spawn_entity(template, position=position, components={Quantity: quantity}|components, tags=tags)
             return item
     else:
         return spawn_entity(template, position=position, components={Quantity: quantity}|components, tags=tags)
@@ -73,8 +74,16 @@ def add_to_inventory(item: Entity, actor: Entity):
         del item.components[Position]
 
 
-
 def drop(item: Entity):
-    item.components[Position] = item.relation_tag[CarriedBy].components[Position]
-    del item.relation_tag[CarriedBy]
-    return item
+    position = item.relation_tag[CarriedBy].components[Position]
+    quantity = item.components[Quantity]
+    map_ = position.map_
+    for e in g.registry.Q.all_of(tags=[position, IsStackable], relations=[(IsA, item.relation_tag[IsA])]):
+        # If there is an identical stackable item on the same square, add to its quantity
+        e.components[Quantity] += quantity
+        item.clear()
+        return e
+    else:
+        item.components[Position] = position
+        del item.relation_tag[CarriedBy]
+        return item

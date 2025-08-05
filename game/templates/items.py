@@ -1,7 +1,7 @@
 import g
 
 from game.components import Graphic, Name, Description
-from game.tags import IsStackable
+from game.tags import IsStackable, IsItem
 
 import game.colors as colors
 
@@ -15,8 +15,9 @@ def new_item(
         ):
     item = g.registry.new_entity(
         components = {Name: name, Graphic: graphic, Description: desc,}|components,
-        tags = tags
+        tags = tags,
     )
+    item.tags.add(IsItem)
     if stackable:
         item.tags.add(IsStackable)
     return item

@@ -29,7 +29,7 @@ def world_init():
 
     add_to_inventory(spawn_item(THINGY), g.player)
     add_to_inventory(spawn_item(THINGY), g.player)
-    add_to_inventory(spawn_item(THINGY), g.player)
+    spawn_item(THINGY, Position(1,1,map_))
     add_to_inventory(spawn_item(THINGY2), g.player)
 
     enter_level(map_)

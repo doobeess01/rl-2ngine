@@ -1,12 +1,10 @@
-import attrs
-
 import g
 
-@attrs.define
 class Text:
-    text: str
-    fg: tuple[int,int,int]
-    bg: tuple[int,int,int]
+    def __init__(self, text, fg: tuple[int,int,int], bg: tuple[int,int,int]):    
+        self.text = text
+        self.fg = fg
+        self.bg = bg
 
     def print(self, x: int, y: int, fg: tuple[int,int,int] = None, bg: tuple[int,int,int] = None, invert:bool=False):
         fg = self.fg if not fg else fg

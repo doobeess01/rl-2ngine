@@ -31,6 +31,8 @@ KEYBINDINGS = {
         K.N5: Wait(),
 
         K.I: EnterSubstate(InventoryView),
+        K.COMMA: PickupItems(),
+        K.D: EnterSubstate(DropItemsMenu),
     },
     Menu: {
         K.UP: MoveCursor(-1),
@@ -40,4 +42,5 @@ KEYBINDINGS = {
     }
 }
 
-KEYBINDINGS[InventoryView] = KEYBINDINGS[Menu]
+for menu_state in [InventoryView, DropItemsMenu, PickupItemsMenu]:
+    KEYBINDINGS[menu_state] = KEYBINDINGS[Menu]

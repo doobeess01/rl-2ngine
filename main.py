@@ -30,21 +30,20 @@ def main():
 
     with tcod.context.new(console=g.console, tileset=tileset) as g.context:
         while True:
-            g.console.clear()
-            g.state.on_render()
-            g.context.present(g.console)
-
             if g.registry:
                 while g.queue().front != g.player:
                     actor = g.queue().front
                     action = actor.components[Controller](actor)  # Choose an action based on the Controller component
                     action(actor)
 
+            g.console.clear()
+            g.state.on_render()
+            g.context.present(g.console)
+
             for event in tcod.event.wait():
                 action = g.state.on_event(event)
                 if action:
                     break
-
 
 
 if __name__ == '__main__':
