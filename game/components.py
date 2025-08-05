@@ -1,7 +1,9 @@
 import attrs
 import tcod
+from tcod.ecs import callbacks, Entity
 import numpy as np
 from typing import Final
+
 
 @attrs.define
 class Position:
@@ -24,6 +26,18 @@ class Position:
 
     def __iter__(self):
         return (self.x, self.y)
+
+@callbacks.register_component_changed(component=Position)
+def on_position_changed(entity: Entity, old: Position | None, new: Position | None) -> None:
+    '''Aesthetically pleasing means of finding entity at any given coordinate.'''
+    if old == new:
+        return
+    if old:
+        entity.tags.remove(old)
+        entity.tags.remove(old.map_)
+    if new:
+        entity.tags.add(new)
+        entity.tags.add(new.map_)
 
 
 @attrs.define

@@ -33,10 +33,8 @@ def main():
             g.context.present(g.console)
 
             if g.registry:
-                from game.components import Name
                 while g.queue().front != g.player:
                     actor = g.queue().front
-                    # print(actor.components[Name])
                     action = actor.components[Controller](actor)  # Choose an action based on the Controller component
                     action(actor)
 

@@ -27,7 +27,7 @@ class InGame(State):
         screen_slice, world_slice = tcod.camera.get_slices(g.CAMERA_DIMENSIONS, map_.components[MapShape], camera)
         g.console.rgb[screen_slice] = TILES['graphic'][map_.components[Tiles][world_slice]]
 
-        for e in g.registry.Q.all_of(components=[Graphic, Position]):
+        for e in g.registry.Q.all_of(components=[Graphic, Position], tags=[map_]):
             pos = e.components[Position]
             rendered_pos = pos - (camera[1], camera[0])
             graphic = e.components[Graphic]

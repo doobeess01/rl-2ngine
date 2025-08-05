@@ -28,8 +28,6 @@ def world_init():
 
 def enter_level(map_: tcod.ecs.Entity):
     g.queue().clear()
-    from game.components import Name
     g.queue().add(g.player)
-    for e in [e for e in g.registry.Q.all_of(tags=[IsActor]) if e.components[Position].map_ == map_ and e != g.player]:
-        print(f'{e.components[Name]}: {str(e.components[Position].x)}')
+    for e in [e for e in g.registry.Q.all_of(tags=[IsActor, g.player.components[Position].map_]) if e != g.player]:
         g.queue().add(e)
