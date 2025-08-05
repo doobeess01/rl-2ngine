@@ -2,9 +2,12 @@ import g
 
 from game.action import Action, GameAction
 from game.tiles import TILES
+from game.message_log import log
 
-from game.components import Position, Tiles
+from game.components import Position, Tiles, Name, HP, UnarmedAttack
 from game.tags import IsCreature
+
+import game.colors as colors
 
 
 class Wait(GameAction):
@@ -27,7 +30,11 @@ class Bump(Directional):
     def __init__(self, direction: tuple[int, int]):
         super().__init__(direction, cost=-1)
     def execute(self, actor):
-        Move(self.direction)(actor)
+        creature = self.creature(actor)
+        if creature:
+            Melee(creature)(actor)
+        else:
+            Move(self.direction)(actor)
 
 class Move(Directional):
     def execute(self, actor):
@@ -35,3 +42,14 @@ class Move(Directional):
         dest = self.dest(actor)
         if TILES['walk_cost'][map_.components[Tiles][dest.ij]] > 0:
             actor.components[Position] = dest
+
+class Melee(Action):
+    def __init__(self, target):
+        self.target = target
+        super().__init__(cost=100)
+
+    def execute(self, actor):
+        damage = actor.components[UnarmedAttack]
+        message_color = colors.MSG_ATTACK if actor != g.player else colors.DEFAULT
+        log(f'{actor.components[Name]} attacks {self.target.components[Name]} for {damage} damage!', message_color)
+        self.target.components[HP] -= damage

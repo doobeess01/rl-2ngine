@@ -8,6 +8,7 @@ from game.tags import IsActor
 from game.queue import Queue
 from game.procgen import generate_map
 from game.entity_tools import spawn_creature
+from game.message_log import MessageLog
 
 
 def world_init():
@@ -20,7 +21,8 @@ def world_init():
     
     g.player = spawn_creature(PLAYER, Position(3,3, map_))
 
-    queue = g.registry[None].components[Queue] = Queue()
+    g.registry[None].components[Queue] = Queue()
+    g.registry[None].components[MessageLog] = MessageLog()
 
     monster = spawn_creature(MONSTER, Position(25,25, map_))
     enter_level(map_)

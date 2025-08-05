@@ -9,7 +9,7 @@ from typing import Final
 class Position:
     x: int
     y: int
-    map_: tcod.ecs.Entity
+    map_: Entity
 
     @property
     def ij(self):
@@ -27,18 +27,6 @@ class Position:
     def __iter__(self):
         return (self.x, self.y)
 
-@callbacks.register_component_changed(component=Position)
-def on_position_changed(entity: Entity, old: Position | None, new: Position | None) -> None:
-    '''Aesthetically pleasing means of finding entity at any given coordinate.'''
-    if old == new:
-        return
-    if old:
-        entity.tags.remove(old)
-        entity.tags.remove(old.map_)
-    if new:
-        entity.tags.add(new)
-        entity.tags.add(new.map_)
-
 
 @attrs.define
 class Graphic:
@@ -54,5 +42,7 @@ MapShape: Final = ('MapShape', tuple[int, int])
 Name: Final = ('Name', str)
 Description: Final = ('Description', str)
 
+MaxHP: Final = ('MaxHP', int)
 HP: Final = ('HP', int)
-Attack: Final = ('Attack', int)
+
+UnarmedAttack: Final = ('Attack', int)

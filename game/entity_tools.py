@@ -1,8 +1,12 @@
 from tcod.ecs import Entity
 
-from game.components import Position
+import g
+
+from game.components import Position, Name
 from game.tags import IsCreature, IsActor
 
+from game.message_log import log
+import game.colors as colors
 
 # Generic functions
 
@@ -21,3 +25,8 @@ def spawn_creature(template: Entity, position: Position, components: dict = {}, 
     creature.tags.add(IsCreature)
     creature.tags.add(IsActor)
     return creature
+
+def kill(actor: Entity):
+    g.queue().remove(actor)
+    log(f'{actor.components[Name]} dies!', colors.MSG_DEATH)
+    actor.clear()

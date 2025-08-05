@@ -8,8 +8,10 @@ from game.states import InGame
 from game.world_tools import world_init
 from game.controller import Controller
 
-CONSOLE_WIDTH = 60
-CONSOLE_HEIGHT = 60
+import game.callbacks  # Initialize tcod.ecs callbacks
+
+CONSOLE_WIDTH = 44
+CONSOLE_HEIGHT = 44
 
 
 THIS_DIR = Path(__file__, "..")

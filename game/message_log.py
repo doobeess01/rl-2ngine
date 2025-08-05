@@ -30,10 +30,10 @@ class MessageLog:
         except IndexError:
             pass
         self.messages.append(message)
-    def render(self, position: Position, rows: int):
+    def render(self, position: tuple[int, int], rows: int):
         for i, message in enumerate(self.messages[-rows:]):
             multiple_text = f' (x{message.count})' if message.count > 1 else ''
-            g.console.print(x=position.x, y=position.y+i, text=message.text + multiple_text, fg=message.fg, bg=message.bg)
+            g.console.print(x=position[0], y=position[1]+i, text=message.text + multiple_text, fg=message.fg, bg=message.bg)
     def clear(self):
         self.messages = []
 

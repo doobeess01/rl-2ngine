@@ -1,6 +1,6 @@
 import g
 
-from game.components import Name, Graphic, Description, HP, Attack
+from game.components import Name, Graphic, Description, MaxHP, HP, UnarmedAttack
 
 from game.controller import Controller
 from game.controllers import Hostile, Wander
@@ -16,7 +16,7 @@ def new_creature(
         tags: set = {},
         ):
     creature = g.registry.new_entity(
-        components = {Name: name, Graphic: graphic, Description: desc, HP: hp, Attack: attack, Controller: controller,}|components,
+        components = {Name: name, Graphic: graphic, Description: desc, MaxHP: hp, HP: hp, UnarmedAttack: attack, Controller: controller,}|components,
         tags = tags
     )
 

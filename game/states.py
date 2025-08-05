@@ -6,7 +6,8 @@ from game.state import State
 from game.action import Action
 from game.tiles import TILES
 
-from game.components import Position, Graphic, Tiles, MapShape
+from game.components import Position, Graphic, Tiles, MapShape, Name, HP, MaxHP
+from game.message_log import MessageLog
 
 
 '''
@@ -22,6 +23,8 @@ class Menu(State):
 
 class InGame(State):
     def on_render(self):
+        g.console.draw_frame(-1,-1,g.CAMERA_DIMENSIONS[1]+2, g.CAMERA_DIMENSIONS[0]+2)
+
         map_ = g.player.components[Position].map_
         camera = tcod.camera.get_camera(g.CAMERA_DIMENSIONS, g.player.components[Position].ij)
         screen_slice, world_slice = tcod.camera.get_slices(g.CAMERA_DIMENSIONS, map_.components[MapShape], camera)
@@ -33,3 +36,8 @@ class InGame(State):
             graphic = e.components[Graphic]
             if 0 <= rendered_pos.x < g.CAMERA_DIMENSIONS[1] and 0 <= rendered_pos.y < g.CAMERA_DIMENSIONS[0]:
                 g.console.rgb[["ch", "fg"]][rendered_pos.ij] = graphic.ch, graphic.fg
+
+        g.registry[None].components[MessageLog].render((0,32), 8)
+
+        g.console.print(32, 1, g.player.components[Name])
+        g.console.print(32, 3, f'HP: {g.player.components[HP]}/{g.player.components[MaxHP]}')
