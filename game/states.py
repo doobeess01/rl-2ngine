@@ -7,6 +7,7 @@ from game.action import Action
 from game.tiles import TILES
 from game.components import Position, Graphic, Tiles, MapShape, Name, HP, MaxHP, Quantity
 from game.message_log import MessageLog
+from game.text import Text
 from game.entity_tools import inventory
 import game.colors as colors
 
@@ -19,9 +20,9 @@ class Menu(State):
 
     def move_cursor(self, direction: int):
         # Don't question this, it works
-        self.cursor = len(self.options)-1 if not self.cursor + direction + 1 else 0 if self.cursor+ direction-1 == len(self.options)-1 else self.cursor+direction
+        self.cursor = len(self.options)-1 if not self.cursor+direction+1 else 0 if self.cursor+direction-1 == len(self.options)-1 else self.cursor+direction
 
-    def get_options(self):
+    def get_options(self) -> list[tuple[Text, Action]]:
         return []
 
     def select(self):
@@ -30,15 +31,14 @@ class Menu(State):
 
 
 class InventoryView(Menu):
-    def get_options(self):
-        return [(e.components[Name]+(f' (x{e.components[Quantity]})' if e.components[Quantity] > 1 else ''), Action(e)) for e in inventory(g.player)]
+    def get_options(self) -> list[tuple[Text, Action]]:
+        return [(Text(e.components[Name]+(f' (x{e.components[Quantity]})' if e.components[Quantity] > 1 else ''),fg=e.components[Graphic].fg, bg=e.components[Graphic].bg), Action(e)) for e in inventory(g.player)]
 
     def on_render(self):
+        fg, bg = colors.DEFAULT
+        g.console.print(0,0,'Inventory',fg=fg,bg=bg)
         for i,option in enumerate(self.options):
-            fg,bg = colors.DEFAULT
-            if i == self.cursor:
-                fg, bg = colors.invert((fg,bg))
-            g.console.print(1,2+i,option[0], fg=fg, bg=bg)
+            option[0].print(1,2+i, invert=True if i==self.cursor else False)
 
 
 class InGame(State):
