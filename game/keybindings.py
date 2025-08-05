@@ -29,5 +29,15 @@ KEYBINDINGS = {
 
         K.PERIOD: Wait(),
         K.N5: Wait(),
+
+        K.I: EnterSubstate(InventoryView),
     },
+    Menu: {
+        K.UP: MoveCursor(-1),
+        K.DOWN: MoveCursor(1),
+        K.RETURN: Select(),
+        K.ESCAPE: ExitState(),
+    }
 }
+
+KEYBINDINGS[InventoryView] = KEYBINDINGS[Menu]

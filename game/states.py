@@ -5,20 +5,40 @@ import g
 from game.state import State
 from game.action import Action
 from game.tiles import TILES
-
-from game.components import Position, Graphic, Tiles, MapShape, Name, HP, MaxHP
+from game.components import Position, Graphic, Tiles, MapShape, Name, HP, MaxHP, Quantity
 from game.message_log import MessageLog
+from game.entity_tools import inventory
+import game.colors as colors
 
 
-'''
 class Menu(State):
-    def __init__(self, options: dict[str: Action]):
-        super().__init__()
-        self.options = options
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.cursor = 0
+        self.options = self.get_options()
 
     def move_cursor(self, direction: int):
-        self.cursor = max(self.cursor + direction if self.cursor != len(self.options)-1 else 0, len(self.options)-1)
-'''  # TODO: Implement
+        # Don't question this, it works
+        self.cursor = len(self.options)-1 if not self.cursor + direction + 1 else 0 if self.cursor+ direction-1 == len(self.options)-1 else self.cursor+direction
+
+    def get_options(self):
+        return []
+
+    def select(self):
+        self.options[self.cursor][1](g.player)  # Execute the action
+        self.options = self.get_options()
+
+
+class InventoryView(Menu):
+    def get_options(self):
+        return [(e.components[Name]+(f' (x{e.components[Quantity]})' if e.components[Quantity] > 1 else ''), Action(e)) for e in inventory(g.player)]
+
+    def on_render(self):
+        for i,option in enumerate(self.options):
+            fg,bg = colors.DEFAULT
+            if i == self.cursor:
+                fg, bg = colors.invert((fg,bg))
+            g.console.print(1,2+i,option[0], fg=fg, bg=bg)
 
 
 class InGame(State):

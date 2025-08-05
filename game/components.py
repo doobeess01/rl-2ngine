@@ -1,6 +1,5 @@
 import attrs
-import tcod
-from tcod.ecs import callbacks, Entity
+from tcod.ecs import Entity
 import numpy as np
 from typing import Final
 
@@ -44,5 +43,6 @@ Description: Final = ('Description', str)
 
 MaxHP: Final = ('MaxHP', int)
 HP: Final = ('HP', int)
-
 UnarmedAttack: Final = ('Attack', int)
+
+Quantity: Final = ('Quantity', int)

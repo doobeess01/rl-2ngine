@@ -41,7 +41,9 @@ def main():
                     action(actor)
 
             for event in tcod.event.wait():
-                g.state.on_event(event)
+                action = g.state.on_event(event)
+                if action:
+                    break
 
 
 
