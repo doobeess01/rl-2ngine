@@ -7,12 +7,14 @@ from typing import Final
 import numpy as np
 import tcod.console
 
+import game.colors as colors
+
 TILES = np.asarray(
     [
-        ("void", (ord(" "), (255,255,255), (0, 0, 0)), 0, True),
-        ("wall", (ord("#"), (255,255,255), (0,0,0)), 0, False),
-        ("window", (ord('#'), (200,200,255), (0, 0, 0)), 0, False),
-        ("floor", (ord("."), (0,255,0), (0,0,0)), 1, True),
+        ("void", (ord(" "), colors.BLACK, colors.BLACK), 0, True),
+        ("wall", (ord("#"), colors.WHITE, colors.BLACK), 0, False),
+        ("window", (ord('#'), colors.LIGHT_BLUE, colors.BLACK), 0, False),
+        ("floor", (ord("."), colors.WHITE, colors.BLACK), 1, True),
     ],
     dtype=[
         ("name", object),

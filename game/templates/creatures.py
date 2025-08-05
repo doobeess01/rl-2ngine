@@ -5,6 +5,8 @@ from game.components import Name, Graphic, Description, MaxHP, HP, UnarmedAttack
 from game.controller import Controller
 from game.controllers import Hostile, Wander
 
+import game.colors as colors
+
 def new_creature(
         name: str = 'unknown creature', 
         graphic: Graphic = None, 
@@ -33,9 +35,9 @@ PLAYER = new_creature(
 
 MONSTER = new_creature(
     name='monster',
-    graphic=Graphic(ord('M'), (200,255,200), (0,0,0)),
+    graphic=Graphic(ord('M'), colors.GREEN, colors.BLACK),
     desc="It's a horrible monster!",
     hp=10,
     attack=3,
-    controller=Controller(),
+    controller=Hostile(),
 )

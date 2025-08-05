@@ -19,7 +19,7 @@ def path_to(actor: tcod.ecs.Entity, dest: Position) -> list[Position]:
 
     map_ = actor.components[Position].map_
 
-    assert dest.map is map_
+    assert dest.map_ is map_
 
     # Copy the walkable array.
     cost = TILES["walk_cost"][map_.components[Tiles]]

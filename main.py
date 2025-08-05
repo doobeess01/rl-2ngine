@@ -10,8 +10,8 @@ from game.controller import Controller
 
 import game.callbacks  # Initialize tcod.ecs callbacks
 
-CONSOLE_WIDTH = 44
-CONSOLE_HEIGHT = 44
+CONSOLE_WIDTH = 45
+CONSOLE_HEIGHT = 45
 
 
 THIS_DIR = Path(__file__, "..")

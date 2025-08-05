@@ -37,7 +37,7 @@ class InGame(State):
             if 0 <= rendered_pos.x < g.CAMERA_DIMENSIONS[1] and 0 <= rendered_pos.y < g.CAMERA_DIMENSIONS[0]:
                 g.console.rgb[["ch", "fg"]][rendered_pos.ij] = graphic.ch, graphic.fg
 
-        g.registry[None].components[MessageLog].render((0,32), 8)
+        g.registry[None].components[MessageLog].render((0,32), 13)
 
         g.console.print(32, 1, g.player.components[Name])
         g.console.print(32, 3, f'HP: {g.player.components[HP]}/{g.player.components[MaxHP]}')
