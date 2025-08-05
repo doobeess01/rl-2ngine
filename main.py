@@ -6,6 +6,7 @@ import g
 from game.keybindings import KEYBINDINGS
 from game.states import InGame
 from game.world_tools import world_init
+from game.controller import Controller
 
 CONSOLE_WIDTH = 60
 CONSOLE_HEIGHT = 60
@@ -31,10 +32,13 @@ def main():
             g.state.on_render()
             g.context.present(g.console)
 
-            while g.registry:
+            if g.registry:
+                from game.components import Name
                 while g.queue().front != g.player:
-                    pass
-                break
+                    actor = g.queue().front
+                    # print(actor.components[Name])
+                    action = actor.components[Controller](actor)  # Choose an action based on the Controller component
+                    action(actor)
 
             for event in tcod.event.wait():
                 g.state.on_event(event)

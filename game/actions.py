@@ -24,6 +24,8 @@ class Directional(GameAction):
 
 
 class Bump(Directional):
+    def __init__(self, direction: tuple[int, int]):
+        super().__init__(direction, cost=-1)
     def execute(self, actor):
         Move(self.direction)(actor)
 

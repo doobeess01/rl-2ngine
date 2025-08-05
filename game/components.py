@@ -35,3 +35,10 @@ class Graphic:
 
 Tiles: Final = ('Tiles', np.ndarray)
 MapShape: Final = ('MapShape', tuple[int, int])
+
+
+Name: Final = ('Name', str)
+Description: Final = ('Description', str)
+
+HP: Final = ('HP', int)
+Attack: Final = ('Attack', int)

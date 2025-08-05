@@ -7,23 +7,29 @@ from game.components import Position, Graphic, Tiles, MapShape
 from game.tags import IsActor
 from game.queue import Queue
 from game.procgen import generate_map
+from game.entity_tools import spawn_creature
 
 
 def world_init():
     g.registry = tcod.ecs.Registry()
+
+    from game.templates.creatures import PLAYER, MONSTER
     
     shape = (40,40)
     map_ = g.registry.new_entity(components={MapShape: shape, Tiles: generate_map(shape)})
     
-    g.player = g.registry.new_entity(components={Position: Position(5,5, map_), Graphic: Graphic(ord('@'), (255,255,255))})
-    
+    g.player = spawn_creature(PLAYER, Position(3,3, map_))
+
     queue = g.registry[None].components[Queue] = Queue()
 
+    monster = spawn_creature(MONSTER, Position(20,20, map_))
     enter_level(map_)
 
 
 def enter_level(map_: tcod.ecs.Entity):
     g.queue().clear()
+    from game.components import Name
+    g.queue().add(g.player)
     for e in [e for e in g.registry.Q.all_of(tags=[IsActor]) if e.components[Position].map_ == map_ and e != g.player]:
+        print(f'{e.components[Name]}: {str(e.components[Position].x)}')
         g.queue().add(e)
-    g.queue().add(g.player)  # Every other entity gets a turn before the player does
