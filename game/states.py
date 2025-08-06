@@ -78,7 +78,7 @@ class ItemList(Menu):
             previous_category = previous_item.components[ItemCategory]
             if category != previous_category or i==0:
                 line_counter += 1
-                g.console.print(0,line_counter,f'-- {ITEM_CATEGORIES[category]} --')
+                g.console.print(0,line_counter,f'-- {ITEM_CATEGORIES[category]} --', fg=colors.PURPLE, bg=colors.BLACK)
                 line_counter += 2
 
             option[0].print(1,line_counter, invert=True if i==self.cursor else False)

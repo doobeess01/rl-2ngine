@@ -13,7 +13,7 @@ This is my second serious attempt at creating such an engine, hence the 2. (If I
 - [x] Movement
 - [x] Basic melee combat
 - [x] Items; inventory; picking up and dropping items
-- [ ] Better items UI
+- [x] Better items UI
 - [ ] FOV
 - [ ] Equippables; weapons, armor that modify attributes
 - [ ] Consumables
