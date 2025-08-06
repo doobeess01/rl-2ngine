@@ -15,7 +15,7 @@ def world_init():
     g.registry = tcod.ecs.Registry()
 
     from game.templates.creatures import PLAYER, MONSTER
-    from game.templates.items import THINGY, THINGY2
+    from game.templates.items import POTION, SCROLL
     
     shape = (60,60)
     map_ = g.registry.new_entity(components={MapShape: shape, Tiles: generate_map(shape)})
@@ -27,10 +27,10 @@ def world_init():
 
     monster = spawn_creature(MONSTER, Position(25,25, map_))
 
-    add_to_inventory(spawn_item(THINGY), g.player)
-    add_to_inventory(spawn_item(THINGY), g.player)
-    spawn_item(THINGY, Position(1,1,map_))
-    add_to_inventory(spawn_item(THINGY2), g.player)
+    add_to_inventory(spawn_item(POTION), g.player)
+    add_to_inventory(spawn_item(POTION), g.player)
+    spawn_item(POTION, Position(1,1,map_))
+    add_to_inventory(spawn_item(SCROLL), g.player)
 
     enter_level(map_)
 

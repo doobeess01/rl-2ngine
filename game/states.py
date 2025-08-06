@@ -5,7 +5,7 @@ import g
 from game.state import State
 from game.action import Action, Pass
 from game.tiles import TILES
-from game.components import Position, Graphic, Tiles, MapShape, Name, HP, MaxHP, Quantity
+from game.components import Position, Graphic, Tiles, MapShape, Name, HP, MaxHP, Quantity, ItemCategory, ITEM_CATEGORIES
 from game.tags import IsItem, IsCreature
 from game.message_log import MessageLog
 from game.text import Text
@@ -39,16 +39,50 @@ class ItemList(Menu):
     def __init__(self, title: str, action: Action = Pass, parent=None):
         self.title = title
         self.action = action
+        self.items = []
         super().__init__(parent)
     def get_options(self) -> list[tuple[Text, Action]]:
-        return [(Text(e.components[Name]+(f' (x{e.components[Quantity]})' if e.components[Quantity] > 1 else ''),fg=e.components[Graphic].fg, bg=e.components[Graphic].bg), self.action(e)) for e in self.get_items()]
+        options = []
+        items = self.get_items()
+        sorted_items = {}
+        # Sort items by category
+        for item in items:
+            category = item.components[ItemCategory]
+            if sorted_items.get(category, 0):
+                sorted_items[category].append(item)
+            else:
+                sorted_items[category] = [item]
+        # Add options
+        for i in range(max(sorted_items)):
+            if sorted_items.get(i+1, 0):
+                for item in sorted_items[i+1]:
+                    name = item.components[Name]
+                    quantity = item.components[Quantity]
+                    graphic = item.components[Graphic]
+                    options.append((
+                        Text(name+(f' (x{quantity})' if quantity > 1 else ''), graphic.fg, graphic.bg),
+                        self.action(item)
+                    ))
+                    self.items.append(item)
+        return options
     def get_items(self):
         return []
     def on_render(self):
         fg, bg = colors.DEFAULT
         g.console.print(0,0,self.title,fg=fg,bg=bg)
+        line_counter = 1
         for i,option in enumerate(self.options):
-            option[0].print(1,2+i, invert=True if i==self.cursor else False)
+            item = self.items[i]
+            previous_item = self.items[i-1]
+            category = item.components[ItemCategory]
+            previous_category = previous_item.components[ItemCategory]
+            if category != previous_category or i==0:
+                line_counter += 1
+                g.console.print(0,line_counter,f'-- {ITEM_CATEGORIES[category]} --')
+                line_counter += 2
+
+            option[0].print(1,line_counter, invert=True if i==self.cursor else False)
+            line_counter += 1
 
 
 class InventoryView(ItemList):

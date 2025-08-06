@@ -1,11 +1,12 @@
 import g
 
-from game.components import Graphic, Name, Description
+from game.components import Graphic, Name, Description, ItemCategory
 from game.tags import IsStackable, IsItem
 
 import game.colors as colors
 
 def new_item(
+        category: int = None,
         name: str = 'unknown creature', 
         graphic: Graphic = None, 
         desc: str = "[No description]", 
@@ -13,8 +14,9 @@ def new_item(
         components: dict = {}, 
         tags: set = {},
         ):
+
     item = g.registry.new_entity(
-        components = {Name: name, Graphic: graphic, Description: desc,}|components,
+        components = {Name: name, Graphic: graphic, Description: desc, ItemCategory: category,}|components,
         tags = tags,
     )
     item.tags.add(IsItem)
@@ -23,13 +25,15 @@ def new_item(
     return item
 
 
-THINGY = new_item(
-    name = 'thingy',
+POTION = new_item(
+    category = 3,
+    name = 'potion',
     graphic = Graphic(ord('?'), colors.LIGHT_BLUE, colors.BLACK),
-    desc = 'what even is this?',
+    desc = 'a potion.',
 )
-THINGY2 = new_item(
-    name = 'thingy2',
+SCROLL = new_item(
+    category = 4,
+    name = 'scroll',
     graphic = Graphic(ord('?'), colors.LIGHT_BLUE, colors.BLACK),
-    desc = 'what even is this? again?',
+    desc = 'a scroll.',
 )
